@@ -1,6 +1,6 @@
-import { log } from "console";
 import useLoginForm from "../../hooks/useLoginForm";
 import DoughnutBankIcon from "../general/DoughnutBankIcon";
+import { sendMessage as sendToastMessage } from "../general/ToastMessage";
 
 const Login = () => {
   const { loginForm, handleChange } = useLoginForm();
@@ -41,9 +41,10 @@ const Login = () => {
 
                 <button
                   type="button"
-                  onClick={() =>
-                    console.log("LoginForm: " + JSON.stringify(loginForm))
-                  }
+                  onClick={() => {
+                    sendToastMessage("678 965");
+                    console.log("LoginForm: " + JSON.stringify(loginForm));
+                  }}
                   data-mdb-button-init
                   data-mdb-ripple-init
                   className="btn btn-primary btn-block mb-4"
