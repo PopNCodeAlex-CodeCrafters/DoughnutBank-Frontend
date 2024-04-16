@@ -1,9 +1,19 @@
+import { useEffect, useRef } from "react";
 import useLoginForm from "../../hooks/useLoginForm";
 import DoughnutBankIcon from "../general/DoughnutBankIcon";
+import SuccessPrompt from "../general/SuccessPrompt";
 import { sendMessage as sendToastMessage } from "../general/ToastMessage";
+import {
+  LottieRefCurrentProps,
+} from "lottie-react";
 
 const Login = () => {
   const { loginForm, handleChange } = useLoginForm();
+  const lottieRef = useRef<LottieRefCurrentProps>(null);
+
+  // useEffect(() => {
+  //   lottieRef.current?.stop();
+  // }, [lottieRef])
 
   return (
     <section className=" text-center text-lg-start">
@@ -44,6 +54,9 @@ const Login = () => {
                   onClick={() => {
                     sendToastMessage("678 965");
                     console.log("LoginForm: " + JSON.stringify(loginForm));
+                    console.log("Play animation");
+                    lottieRef.current?.play();
+                    console.log("Played it");
                   }}
                   data-mdb-button-init
                   data-mdb-ripple-init
@@ -51,6 +64,7 @@ const Login = () => {
                 >
                   Sign in
                 </button>
+                <SuccessPrompt forwardedRef={lottieRef} />
               </form>
             </div>
           </div>
