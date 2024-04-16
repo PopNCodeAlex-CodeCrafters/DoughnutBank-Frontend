@@ -1,11 +1,13 @@
 import OrderSummary from "./OrderSummary";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import SuccessPrompt from "../general/SuccessPrompt";
 import { LottieRefCurrentProps } from "lottie-react";
+import InsertOTP from "./InsertOTP";
 
 const OrderCar = () => {
   const lottieRef = useRef<LottieRefCurrentProps>(null);
+  const [otpInputShow, setOtpInputShow] = useState(false);
 
   useEffect(() => {
     stopSuccessAnimation();
@@ -22,9 +24,17 @@ const OrderCar = () => {
     }, 2000);
   };
 
+  const askForOtp = () => {
+    setOtpInputShow(true);
+  }
+
   return (
     <div>
-      <OrderSummary onPurchaseClick={playSuccessAnimation}></OrderSummary>
+      <OrderSummary onPurchaseClick={askForOtp}></OrderSummary>
+      <InsertOTP
+        show={otpInputShow}
+        onHide={() => setOtpInputShow(false)}
+      ></InsertOTP>
       <SuccessPrompt forwardedRef={lottieRef} />
     </div>
   );
