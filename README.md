@@ -1,3 +1,10 @@
+# Implementation
+## Pages
+A login page (email and password as credentials) and a mocked purchase page the client lands on after logging in. The purchase cannot be realised until the OTP received via a toast message is inputed.
+
+## Styling
+Using bootstrap and react-bootstrap for some of the components (eg: the modal).
+
 # Technical Challenge
 
 ## The problem
