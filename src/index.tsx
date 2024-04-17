@@ -2,13 +2,55 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './custom.scss';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Login from './components/login/Login';
+import { ToastMessage } from './components/general/ToastMessage';
+import OrderCar from './components/transactions/OrderCar';
+import {
+  Outlet,
+  RouterProvider,
+  createRootRoute,
+  createRoute,
+  createRouter
+} from '@tanstack/react-router';
+
+const rootRoute = createRootRoute({
+  component: () => (
+    <>
+      <Outlet />
+      <ToastMessage />
+    </>
+  )
+});
+
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: () => <Login></Login>
+});
+
+const purchaseRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/purchase',
+  component: () => <OrderCar></OrderCar>
+});
+
+//@ts-ignore
+const routeTree = rootRoute.addChildren([loginRoute, purchaseRoute]);
+
+const router = createRouter({ routeTree });
+
+declare module '@tanstack/react-router' {
+  // eslint-disable-next-line no-unused-vars
+  interface Register {
+    router: typeof router;
+  }
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 

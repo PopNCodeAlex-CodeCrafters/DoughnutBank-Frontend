@@ -1,12 +1,8 @@
-import useLoginForm from "../../hooks/useLoginForm";
-import authenticationService from "../../services/Authentication";
-import DoughnutBankIcon from "../general/DoughnutBankIcon";
-import { sendMessage as sendToastMessage } from "../general/ToastMessage";
-
+import useLoginForm from '../../hooks/useLoginForm';
+import DoughnutBankIcon from '../general/DoughnutBankIcon';
 
 const Login = () => {
-  const { loginForm, handleChange } = useLoginForm();
-
+  const { loginForm, handleChange, formSubmit } = useLoginForm();
   return (
     <section className=" text-center text-lg-start">
       <div className="card mb-3">
@@ -43,18 +39,12 @@ const Login = () => {
 
                 <button
                   type="button"
-                  onClick={() => {
-                    sendToastMessage("678 965");
-                    console.log("LoginForm: " + JSON.stringify(loginForm));
-                    authenticationService.login();
-                  }}
+                  onClick={formSubmit}
                   data-mdb-button-init
                   data-mdb-ripple-init
-                  className="btn btn-primary btn-block mb-4"
-                >
+                  className="btn btn-primary btn-block mb-4">
                   Sign in
                 </button>
-                
               </form>
             </div>
           </div>
