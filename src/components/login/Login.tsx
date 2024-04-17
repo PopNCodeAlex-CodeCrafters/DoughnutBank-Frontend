@@ -1,4 +1,5 @@
 import useLoginForm from "../../hooks/useLoginForm";
+import authenticationService from "../../services/Authentication";
 import DoughnutBankIcon from "../general/DoughnutBankIcon";
 import { sendMessage as sendToastMessage } from "../general/ToastMessage";
 
@@ -45,6 +46,7 @@ const Login = () => {
                   onClick={() => {
                     sendToastMessage("678 965");
                     console.log("LoginForm: " + JSON.stringify(loginForm));
+                    authenticationService.login();
                   }}
                   data-mdb-button-init
                   data-mdb-ripple-init
