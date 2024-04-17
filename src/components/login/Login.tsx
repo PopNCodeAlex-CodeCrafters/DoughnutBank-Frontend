@@ -2,7 +2,7 @@ import useLoginForm from '../../hooks/useLoginForm';
 import DoughnutBankIcon from '../general/DoughnutBankIcon';
 
 const Login = () => {
-  const { loginForm, handleChange, formSubmit } = useLoginForm();
+  const { loginForm, handleChange, isValid, formSubmit } = useLoginForm();
   return (
     <section className=" text-center text-lg-start">
       <div className="card mb-3">
@@ -10,31 +10,31 @@ const Login = () => {
           <div className="col-lg-8 align-items-center justify-content-center background-color-black">
             <DoughnutBankIcon></DoughnutBankIcon>
             <div className="card-body py-5 px-md-5">
-              <form className="was-validated">
+              <form>
                 <div data-mdb-input-init className="form-outline mb-4">
-                  <input
-                    type="email"
-                    id="emailId"
-                    className="form-control"
-                    value={loginForm.email}
-                    onChange={handleChange}
-                  />
                   <label className="form-label" htmlFor="emailId">
                     Email address
                   </label>
+                  <input
+                    type="email"
+                    id="emailId"
+                    className={`form-control ${isValid.email ? 'is-valid' : 'is-invalid'}`}
+                    value={loginForm.email}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div data-mdb-input-init className="form-outline mb-4">
-                  <input
-                    type="password"
-                    id="passwordId"
-                    className="form-control"
-                    value={loginForm.password}
-                    onChange={handleChange}
-                  />
                   <label className="form-label" htmlFor="passwordId">
                     Password
                   </label>
+                  <input
+                    type="password"
+                    id="passwordId"
+                    className={`form-control ${isValid.password ? 'is-valid' : 'is-invalid'}`}
+                    value={loginForm.password}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <button

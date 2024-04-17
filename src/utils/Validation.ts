@@ -1,6 +1,6 @@
 class Validation {
-  emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  private emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  private passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
   validateEmail(email: string): boolean {
     return this.validateString(this.emailRegex, email);
