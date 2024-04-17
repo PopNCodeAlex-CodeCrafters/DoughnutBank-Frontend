@@ -1,4 +1,4 @@
-import { OTPresponse } from "../global";
+import { OTPresponse } from '../global';
 
 class Authentication {
   api_url = process.env.REACT_APP_API_URL;
