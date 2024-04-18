@@ -8,6 +8,9 @@ export type LoginFormValidation = {
   password: boolean;
 };
 
-export type OTPresponse = {
-  otp: string;
+export type OTP = {
+  otpValue?: string;
+  expirationTime?: number
+  publicKey?: string;
+  iv?: string;
 };

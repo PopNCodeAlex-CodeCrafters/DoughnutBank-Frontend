@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { LoginForm, LoginFormValidation } from '../global';
 import authenticationService from '../services/Authentication';
 import validationUtil from '../utils/Validation';
+import { sendMessage } from '../components/general/ToastMessage';
+import { useNavigate } from '@tanstack/react-router';
 
 type LoginFormReturnType = {
   loginForm: LoginForm;
@@ -12,6 +14,7 @@ type LoginFormReturnType = {
 };
 
 export default function useLoginForm(): LoginFormReturnType {
+  const navigate = useNavigate();
   const [loginForm, setLoginForm] = useState<LoginForm>({
     email: '',
     password: ''
@@ -51,13 +54,20 @@ export default function useLoginForm(): LoginFormReturnType {
   };
 
   const allFieldsAreValid = (): boolean => {
-    return isValid.email && isValid.password
-  }
+    return isValid.email && isValid.password;
+  };
   const formSubmit = async () => {
-    if(allFieldsAreValid())
-      {
-        authenticationService.login(loginForm.email, loginForm.password);
-      }
+    if (allFieldsAreValid()) {
+      const response: Response = await authenticationService.login(
+        loginForm.email,
+        loginForm.password
+      );
+      if (response.ok) {
+        navigate({
+          to: '/purchase'
+        });
+      } else sendMessage('Could not log in');
+    }
   };
 
   return { loginForm, handleChange, isValid, formSubmit };

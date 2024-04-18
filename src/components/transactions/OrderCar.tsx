@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import SuccessPrompt from "../general/SuccessPrompt";
 import { LottieRefCurrentProps } from "lottie-react";
 import InsertOTP from "./InsertOTP";
+import authenticationService from "../../services/Authentication";
+import DiffieHellman from "../../services/DiffieHellman";
 
 const OrderCar = () => {
   const lottieRef = useRef<LottieRefCurrentProps>(null);
@@ -25,7 +27,15 @@ const OrderCar = () => {
   };
 
   const askForOtp = () => {
+    askBackendForOTP()
+    
     setOtpInputShow(true);
+  }
+
+  const askBackendForOTP = async () => {
+    const diffieHellman = new DiffieHellman();
+    const response = await authenticationService.getEncryptedOTP(diffieHellman.publicKey);
+    console.log("We've got something" + JSON.stringify(response))
   }
 
   return (

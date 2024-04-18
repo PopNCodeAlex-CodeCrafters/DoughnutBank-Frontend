@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import './custom.scss';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Login from './components/login/Login';
 import { ToastMessage } from './components/general/ToastMessage';
 import OrderCar from './components/transactions/OrderCar';
 import {
@@ -26,7 +25,7 @@ const rootRoute = createRootRoute({
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: () => <Login></Login>
+  component: () => <OrderCar></OrderCar> //TODO change to login
 });
 
 const purchaseRoute = createRoute({
