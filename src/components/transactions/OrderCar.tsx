@@ -21,12 +21,12 @@ const OrderCar = () => {
     if (lottieRef.current !== null) lottieRef.current.stop();
   };
 
-  // const playSuccessAnimation = () => {
-  //   lottieRef.current?.play();
-  //   setTimeout(() => {
-  //     stopSuccessAnimation();
-  //   }, 2000);
-  // };
+  const playSuccessAnimation = () => {
+    lottieRef.current?.play();
+    setTimeout(() => {
+      stopSuccessAnimation();
+    }, 2000);
+  };
 
   const askForOtp = () => {
     askBackendForOTP();
@@ -46,7 +46,11 @@ const OrderCar = () => {
   return (
     <div>
       <OrderSummary onPurchaseClick={askForOtp}></OrderSummary>
-      <InsertOTP show={otpInputShow} onHide={() => setOtpInputShow(false)}></InsertOTP>
+      <InsertOTP
+        show={otpInputShow}
+        onHide={() => setOtpInputShow(false)}
+        onVerify={() => setOtpInputShow(false)}
+        onSuccess={() => playSuccessAnimation()}></InsertOTP>
       <SuccessPrompt forwardedRef={lottieRef} />
     </div>
   );

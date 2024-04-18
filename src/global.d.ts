@@ -15,6 +15,7 @@ export type User = {
 };
 
 export type OTP = {
+  userEmail?: string;
   otpValue?: string;
   expirationTime?: number;
   publicKey?: string;

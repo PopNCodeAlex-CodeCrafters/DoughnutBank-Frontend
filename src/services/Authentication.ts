@@ -51,20 +51,25 @@ class Authentication {
       email: email,
       password: password,
       otp: {
-        otpValue: otp
+        otpValue: otp,
+        userEmail: email
       }
     };
-    const response = await fetch(`${this.api_url}/checkOTP`, {
-      method: 'POST',
-      headers: {
-        'X-Api-Key': process.env.REACT_APP_API_KEY,
-        'Content-Type': 'application/json',
-        Authorization: `Basic ${email}:${password}`
-      },
-      body: JSON.stringify(user)
-    });
 
-    return response;
+    try {
+      const response = await fetch(`${this.api_url}/checkOTP`, {
+        method: 'POST',
+        headers: {
+          'X-Api-Key': process.env.REACT_APP_API_KEY,
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${email}:${password}`
+        },
+        body: JSON.stringify(user)
+      });
+      return response;
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 }
 
