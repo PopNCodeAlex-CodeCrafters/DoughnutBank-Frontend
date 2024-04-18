@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { LoginForm, LoginFormValidation } from '../global';
-import authenticationService from '../services/Authentication';
+import { LoginForm, LoginFormValidation, User } from '../global';
+import Authentication from '../services/Authentication';
 import validationUtil from '../utils/Validation';
 import { sendMessage } from '../components/general/ToastMessage';
 import { useNavigate } from '@tanstack/react-router';
+import cookiesUtil from '../utils/Cookies';
 
 type LoginFormReturnType = {
   loginForm: LoginForm;
@@ -58,16 +59,23 @@ export default function useLoginForm(): LoginFormReturnType {
   };
   const formSubmit = async () => {
     if (allFieldsAreValid()) {
-      const response: Response = await authenticationService.login(
-        loginForm.email,
-        loginForm.password
-      );
-      if (response.ok) {
+      try {
+        const authenticationService = new Authentication();
+        const user: User = await authenticationService.login(loginForm.email, loginForm.password);
+
+        saveCredentialsToCookies(user);
         navigate({
           to: '/purchase'
         });
-      } else sendMessage('Could not log in');
-    }
+      } catch (Error) {
+        sendMessage('Could not log in');
+      }
+    } else sendMessage('Make sure all fields are valid');
+  };
+
+  const saveCredentialsToCookies = (user: User) => {
+    cookiesUtil.saveCookie('email', user.email);
+    cookiesUtil.saveCookie('password', user.password);
   };
 
   return { loginForm, handleChange, isValid, formSubmit };

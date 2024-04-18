@@ -1,11 +1,13 @@
-import OrderSummary from "./OrderSummary";
+import OrderSummary from './OrderSummary';
 
-import { useEffect, useRef, useState } from "react";
-import SuccessPrompt from "../general/SuccessPrompt";
-import { LottieRefCurrentProps } from "lottie-react";
-import InsertOTP from "./InsertOTP";
-import authenticationService from "../../services/Authentication";
-import DiffieHellman from "../../services/DiffieHellman";
+import { useEffect, useRef, useState } from 'react';
+import SuccessPrompt from '../general/SuccessPrompt';
+import { LottieRefCurrentProps } from 'lottie-react';
+import InsertOTP from './InsertOTP';
+import Authentication from '../../services/Authentication';
+import DiffieHellman from '../../services/DiffieHellman';
+import { OTP } from '../../global';
+import { sendMessage } from '../general/ToastMessage';
 
 const OrderCar = () => {
   const lottieRef = useRef<LottieRefCurrentProps>(null);
@@ -19,32 +21,32 @@ const OrderCar = () => {
     if (lottieRef.current !== null) lottieRef.current.stop();
   };
 
-  const playSuccessAnimation = () => {
-    lottieRef.current?.play();
-    setTimeout(() => {
-      stopSuccessAnimation();
-    }, 2000);
-  };
+  // const playSuccessAnimation = () => {
+  //   lottieRef.current?.play();
+  //   setTimeout(() => {
+  //     stopSuccessAnimation();
+  //   }, 2000);
+  // };
 
   const askForOtp = () => {
-    askBackendForOTP()
-    
+    askBackendForOTP();
+
     setOtpInputShow(true);
-  }
+  };
 
   const askBackendForOTP = async () => {
     const diffieHellman = new DiffieHellman();
-    const response = await authenticationService.getEncryptedOTP(diffieHellman.publicKey);
-    console.log("We've got something" + JSON.stringify(response))
-  }
+    const authenticationService = new Authentication();
+    const otpResponse: OTP = await authenticationService.getEncryptedOTP(diffieHellman.publicKey);
+    //would have decrypted using diffieHellman.decrypt(otpResponse.publicKey, otpResponse.otpValue, otpResponse.iv),
+    //fields that were supposed to be populated if the creation of the 'shared key' would have worked on the backend
+    if (otpResponse.otpValue !== null) sendMessage(otpResponse.otpValue);
+  };
 
   return (
     <div>
       <OrderSummary onPurchaseClick={askForOtp}></OrderSummary>
-      <InsertOTP
-        show={otpInputShow}
-        onHide={() => setOtpInputShow(false)}
-      ></InsertOTP>
+      <InsertOTP show={otpInputShow} onHide={() => setOtpInputShow(false)}></InsertOTP>
       <SuccessPrompt forwardedRef={lottieRef} />
     </div>
   );

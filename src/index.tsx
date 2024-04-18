@@ -12,6 +12,7 @@ import {
   createRoute,
   createRouter
 } from '@tanstack/react-router';
+import Login from './components/login/Login';
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -25,7 +26,7 @@ const rootRoute = createRootRoute({
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: () => <OrderCar></OrderCar> //TODO change to login
+  component: () => <Login></Login>
 });
 
 const purchaseRoute = createRoute({

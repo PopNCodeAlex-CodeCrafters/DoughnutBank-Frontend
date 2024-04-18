@@ -1,8 +1,10 @@
-import { OTP } from '../global';
+import { OTP, User } from '../global';
+import cookiesUtil from '../utils/Cookies';
 
 class Authentication {
   api_url = process.env.REACT_APP_API_URL;
-  async login(email: string, password: string): Promise<Response> {
+
+  async login(email: string, password: string): Promise<User> {
     if (!process.env.REACT_APP_API_KEY) throw new Error('No API key specified in .env file');
     const response = await fetch(`${this.api_url}/login`, {
       method: 'POST',
@@ -15,26 +17,55 @@ class Authentication {
         password: password
       })
     });
-    return response;
+    if (!response.ok) throw new Error('Could not log in');
+    const user: User = await response.json();
+    return user;
   }
 
-  async getEncryptedOTP(publicKey: string): Promise<Response> {
+  async getEncryptedOTP(publicKey: string): Promise<OTP> {
     if (!process.env.REACT_APP_API_KEY) throw new Error('No API key specified in .env file');
-    const otp: OTP = {
+    const otpBody: OTP = {
       publicKey: publicKey
     };
-    console.log('THIS SI WAHT I AM SENDING' + JSON.stringify(otp));
+    const email = cookiesUtil.getEmailFromCookie();
+    const password = cookiesUtil.getPasswordFromCookie();
     const response = await fetch(`${this.api_url}/OTP`, {
       method: 'POST',
       headers: {
-        'X-Api-Key': process.env.REACT_APP_API_KEY
+        'X-Api-Key': process.env.REACT_APP_API_KEY,
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${email}:${password}`
       },
-      body: JSON.stringify(otp)
+      body: JSON.stringify(otpBody)
     });
 
-    return response.json();
+    const otp: OTP = await response.json();
+    return otp;
+  }
+
+  async checkOTP(otp: string): Promise<Response> {
+    if (!process.env.REACT_APP_API_KEY) throw new Error('No API key specified in .env file');
+    const email = cookiesUtil.getEmailFromCookie();
+    const password = cookiesUtil.getPasswordFromCookie();
+    const user: User = {
+      email: email,
+      password: password,
+      otp: {
+        otpValue: otp
+      }
+    };
+    const response = await fetch(`${this.api_url}/checkOTP`, {
+      method: 'POST',
+      headers: {
+        'X-Api-Key': process.env.REACT_APP_API_KEY,
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${email}:${password}`
+      },
+      body: JSON.stringify(user)
+    });
+
+    return response;
   }
 }
 
-const authenticationService = new Authentication();
-export default authenticationService;
+export default Authentication;
