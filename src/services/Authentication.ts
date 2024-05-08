@@ -1,4 +1,4 @@
-import { OTP, User } from '../global';
+import { EncryptedOTP, User } from '../global';
 import cookiesUtil from '../utils/Cookies';
 
 class Authentication {
@@ -22,11 +22,9 @@ class Authentication {
     return user;
   }
 
-  async getEncryptedOTP(publicKey: string): Promise<OTP> {
+  async getEncryptedOTP(publicKey: string): Promise<EncryptedOTP> {
     if (!process.env.REACT_APP_API_KEY) throw new Error('No API key specified in .env file');
-    const otpBody: OTP = {
-      publicKey: publicKey
-    };
+
     const email = cookiesUtil.getEmailFromCookie();
     const password = cookiesUtil.getPasswordFromCookie();
     const response = await fetch(`${this.api_url}/OTP`, {
@@ -36,10 +34,12 @@ class Authentication {
         'Content-Type': 'application/json',
         Authorization: `Basic ${email}:${password}`
       },
-      body: JSON.stringify(otpBody)
+      body: JSON.stringify({
+        diffieHellmanPublicKey: publicKey
+      })
     });
 
-    const otp: OTP = await response.json();
+    const otp: EncryptedOTP = await response.json();
     return otp;
   }
 
@@ -47,14 +47,8 @@ class Authentication {
     if (!process.env.REACT_APP_API_KEY) throw new Error('No API key specified in .env file');
     const email = cookiesUtil.getEmailFromCookie();
     const password = cookiesUtil.getPasswordFromCookie();
-    const user: User = {
-      email: email,
-      password: password,
-      otp: {
-        otpValue: otp,
-        userEmail: email
-      }
-    };
+
+    //CONSIDERING NO ENCRYPTION
 
     try {
       const response = await fetch(`${this.api_url}/checkOTP`, {
@@ -64,7 +58,9 @@ class Authentication {
           'Content-Type': 'application/json',
           Authorization: `Basic ${email}:${password}`
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify({
+          otpValue: otp
+        })
       });
       return response;
     } catch (error: any) {

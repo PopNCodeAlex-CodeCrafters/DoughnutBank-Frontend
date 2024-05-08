@@ -11,13 +11,13 @@ export type LoginFormValidation = {
 export type User = {
   email: string;
   password: string;
-  otp?: OTP;
+  otp?: EncryptedOTP;
 };
 
-export type OTP = {
-  userEmail?: string;
-  otpValue?: string;
-  expirationTime?: number;
+export type EncryptedOTP = {
+  userEmail: string;
+  otpValue: string;
+  expirationTime: number;
   publicKey?: string;
   iv?: string;
 };

@@ -6,8 +6,8 @@ import { LottieRefCurrentProps } from 'lottie-react';
 import InsertOTP from './InsertOTP';
 import Authentication from '../../services/Authentication';
 import DiffieHellman from '../../services/DiffieHellman';
-import { OTP } from '../../global';
 import { sendMessage } from '../general/ToastMessage';
+import { EncryptedOTP } from '../../global';
 
 const OrderCar = () => {
   const lottieRef = useRef<LottieRefCurrentProps>(null);
@@ -37,7 +37,9 @@ const OrderCar = () => {
   const askBackendForOTP = async () => {
     const diffieHellman = new DiffieHellman();
     const authenticationService = new Authentication();
-    const otpResponse: OTP = await authenticationService.getEncryptedOTP(diffieHellman.publicKey);
+    const otpResponse: EncryptedOTP = await authenticationService.getEncryptedOTP(
+      diffieHellman.publicKey
+    );
     //would have decrypted using diffieHellman.decrypt(otpResponse.publicKey, otpResponse.otpValue, otpResponse.iv),
     //fields that were supposed to be populated if the creation of the 'shared key' would have worked on the backend
     if (otpResponse.otpValue !== null) sendMessage(otpResponse.otpValue);
